@@ -1,0 +1,70 @@
+{
+    "config": {
+        "batch_size": 8,
+        "epochs": 10,
+        "learning_rate": 0.0001,
+        "model": "resnet50"
+    },
+    "epochs": [
+        {
+            "epoch": 1,
+            "loss": 74.5458353869617,
+            "train_accuracy": 0.8208333333333333,
+            "val_accuracy": 0.9
+        },
+        {
+            "epoch": 2,
+            "loss": 38.62022024765611,
+            "train_accuracy": 0.9141666666666667,
+            "val_accuracy": 0.95
+        },
+        {
+            "epoch": 3,
+            "loss": 30.201529891230166,
+            "train_accuracy": 0.9341666666666667,
+            "val_accuracy": 0.955
+        },
+        {
+            "epoch": 4,
+            "loss": 19.670234533958137,
+            "train_accuracy": 0.9575,
+            "val_accuracy": 0.965
+        },
+        {
+            "epoch": 5,
+            "loss": 12.95128375175409,
+            "train_accuracy": 0.9675,
+            "val_accuracy": 0.955
+        },
+        {
+            "epoch": 6,
+            "loss": 10.557901148917153,
+            "train_accuracy": 0.975,
+            "val_accuracy": 0.955
+        },
+        {
+            "epoch": 7,
+            "loss": 10.338457083329558,
+            "train_accuracy": 0.9758333333333333,
+            "val_accuracy": 0.96
+        },
+        {
+            "epoch": 8,
+            "loss": 19.924649332417175,
+            "train_accuracy": 0.9558333333333333,
+            "val_accuracy": 0.875
+        },
+        {
+            "epoch": 9,
+            "loss": 11.09431994089391,
+            "train_accuracy": 0.9758333333333333,
+            "val_accuracy": 0.95
+        },
+        {
+            "epoch": 10,
+            "loss": 11.789029365638271,
+            "train_accuracy": 0.9725,
+            "val_accuracy": 0.94
+        }
+    ]
+}
