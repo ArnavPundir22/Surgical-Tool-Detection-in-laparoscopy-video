@@ -159,19 +159,19 @@ Outputs generated:
 
 ---
 
-## 🤝 Contributing
+# 🤝 Contributing
 
 Contributions are welcome!
 
-# Fork the repo  
-# Create a new branch  
-git checkout -b feature/your-feature  
+### Fork the repo  
+### Create a new branch  
+`git checkout -b feature/your-feature`
   
-# Commit changes  
-git commit -m "Add your feature"  
+### Commit changes  
+`git commit -m "Add your feature"  `
   
-# Push  
-git push origin feature/your-feature
+### Push  
+`git push origin feature/your-feature`
 
 Then create a Pull Request 🚀
 
@@ -179,7 +179,7 @@ Then create a Pull Request 🚀
 
 ## 📜 License
 
-This project is open-source and available under the **MIT License**.
+This project is open-source 
 
 ---
 
