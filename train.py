@@ -23,28 +23,16 @@ OUTPUT_DIR = "outputs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ================= TRANSFORMS =================
-# Added ImageNet normalization to stabilize transfer learning gradients
-# Since we are using a ResNet50 model pre-trained on ImageNet, the input images 
-# MUST match the exact statistical distribution (mean and standard deviation) 
-# of the original ImageNet dataset. Without this, the pre-trained weights will 
-# misinterpret the colors and the model will struggle to learn.
-normalize_tf = transforms.Normalize(
-    mean=[0.485, 0.456, 0.406],
-    std=[0.229, 0.224, 0.225]
-)
-
 train_tf = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
-    transforms.ToTensor(),
-    normalize_tf # Applied here
+    transforms.ToTensor()
 ])
 
 val_tf = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    normalize_tf # Applied here
+    transforms.ToTensor()
 ])
 
 # ================= DATA =================
@@ -82,8 +70,8 @@ train_losses, val_accuracies, train_accuracies = [], [], []
 # ================= TRAIN FUNCTION =================
 def train_one_epoch():
     model.train()
-    cumulative_loss = 0.0
-    correct_predictions = 0
+    total_loss = 0
+    correct = 0
 
     for imgs, labels in tqdm(train_loader):
         imgs, labels = imgs.to(DEVICE), labels.to(DEVICE)
@@ -95,21 +83,12 @@ def train_one_epoch():
         loss.backward()
         optimizer.step()
 
-        # FIX: Corrected loss calculation.
-        # `loss.item()` gives the *average* loss of the current batch.
-        # To get the true epoch loss, we must multiply the batch average by the 
-        # number of images in the batch to get the total sum, and later divide 
-        # by the entire dataset size.
-        cumulative_loss += loss.item() * imgs.size(0)
-        
+        total_loss += loss.item()
         preds = outputs.argmax(1)
-        correct_predictions += (preds == labels).sum().item()
+        correct += (preds == labels).sum().item()
 
-    # Calculate true epoch averages based on the total number of images
-    true_epoch_loss = cumulative_loss / len(train_ds)
-    epoch_acc = correct_predictions / len(train_ds)
-    
-    return true_epoch_loss, epoch_acc
+    acc = correct / len(train_ds)
+    return total_loss, acc
 
 # ================= VALIDATION =================
 def validate():
