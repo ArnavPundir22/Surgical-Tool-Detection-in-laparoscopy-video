@@ -4,8 +4,6 @@ import torch.nn as nn
 from torchvision import transforms, models
 from PIL import Image
 import os
-from collections import deque  
-import statistics
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -13,9 +11,7 @@ classes = ['clipper', 'grasper', 'hook', 'scissor']
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    # FIX: Added ImageNet normalization below
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) 
+    transforms.ToTensor()
 ])
 
 # ================= LOAD MODEL =================
@@ -53,12 +49,6 @@ def process_video(video_path):
         raise Exception("Error opening VideoWriter")
 
     frame_count = 0
-    
-    # FIX: Added a temporal smoothing buffer.
-    # Surgical videos have high motion blur, causing the classifier to "flicker" 
-    # its predictions rapidly from frame to frame. This deque stores the last 
-    # 5 predictions, acting as a simple low-pass filter to stabilize the UI.
-    prediction_buffer = deque(maxlen=5) 
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -76,19 +66,8 @@ def process_video(video_path):
             probs = torch.softmax(output, dim=1)
             conf, pred = torch.max(probs, 1)
 
-        # Append the current frame's prediction to the buffer
-        prediction_buffer.append(pred.item())
-        
-        # Select the most frequent prediction from the last 5 frames
-        smoothed_pred = statistics.mode(prediction_buffer)
-
-        # Use the smoothed prediction for the UI label
-        label = classes[smoothed_pred]
-        
-        # PRO-FIX: Get the specific probability of the smoothed prediction class, 
-        # not just the maximum probability of the current frame.
-        confidence = probs[0][smoothed_pred].item()
-        # <------------------------------>
+        label = classes[pred.item()]
+        confidence = conf.item()
 
         text = f"{label} ({confidence:.2f})"
 
